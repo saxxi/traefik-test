@@ -1,0 +1,283 @@
+################################################################
+# Global configuration
+################################################################
+
+# Timeout in seconds to give active requests a chance to finish during hot-reloads
+# graceTimeOut = 10
+
+# Traefik logs file. If not defined, logs to stdout
+# traefikLogsFile = "log/traefik.log"
+
+# Access logs file
+# accessLogsFile = "log/access.log"
+
+# Log level
+# logLevel = "ERROR"
+logLevel = "DEBUG"
+
+# Backends throttle duration: minimum duration between 2 events from providers
+# before applying a new configuration. It avoids unnecessary reloads if multiples events
+# are sent in a short amount of time. ("2s")
+# ProvidersThrottleDuration = "5s"
+
+# If non-zero, controls the maximum idle (keep-alive) to keep per-host.  If zero, DefaultMaxIdleConnsPerHost is used.
+# If you encounter 'too many open files' errors, you can either change this value, or change `ulimit` value.
+# Default: http.DefaultMaxIdleConnsPerHost
+# MaxIdleConnsPerHost = 200
+
+# Entrypoints to be used by frontends that do not specify any entrypoint.
+# Each frontend can specify its own entrypoints.
+# defaultEntryPoints = ["http", "https"]
+
+# Enable ACME (Let's Encrypt): automatic SSL
+# Optional
+#
+# [acme]
+
+# Email address used for registration
+#
+# Required
+#
+# email = "test@traefik.io"
+
+# File used for certificates storage.
+# WARNING, if you use Traefik in Docker, don't forget to mount this file as a volume.
+#
+# Required
+#
+# storageFile = "acme.json"
+
+# Entrypoint to proxy acme challenge to.
+# WARNING, must point to an entrypoint on port 443
+#
+# Required
+#
+# entryPoint = "https"
+
+# Enable on demand certificate. This will request a certificate from Let's Encrypt during the first TLS handshake for a hostname that does not yet have a certificate.
+# WARNING, TLS handshakes will be slow when requesting a hostname certificate for the first time, this can leads to DoS attacks.
+# WARNING, Take note that Let's Encrypt have rate limiting: https://community.letsencrypt.org/t/quick-start-guide/1631
+#
+# Optional
+#
+# onDemand = true
+
+# CA server to use
+# Uncomment the line to run on the staging let's encrypt server
+# Leave comment to go to prod
+#
+# Optional
+#
+# caServer = "https://acme-staging.api.letsencrypt.org/directory"
+
+# Domains list
+# You can provide SANs (alternative domains) to each main domain
+#
+# [[acme.domains]]
+#   main = "local1.com"
+#   sans = ["test1.local1.com", "test2.local1.com"]
+# [[acme.domains]]
+#   main = "local2.com"
+#   sans = ["test1.local2.com", "test2x.local2.com"]
+# [[acme.domains]]
+#   main = "local3.com"
+# [[acme.domains]]
+#   main = "local4.com"
+
+# Entrypoints definition
+#
+# Optional
+# Default:
+# [entryPoints]
+#   [entryPoints.http]
+#   address = ":80"
+#
+# To redirect an http entrypoint to an https entrypoint (with SNI support):
+# [entryPoints]
+#   [entryPoints.http]
+#   address = ":80"
+#     [entryPoints.http.redirect]
+#       entryPoint = "https"
+#   [entryPoints.https]
+#   address = ":443"
+#     [entryPoints.https.tls]
+#       [[entryPoints.https.tls.certificates]]
+#       CertFile = "integration/fixtures/https/snitest.com.cert"
+#       KeyFile = "integration/fixtures/https/snitest.com.key"
+#       [[entryPoints.https.tls.certificates]]
+#       CertFile = "integration/fixtures/https/snitest.org.cert"
+#       KeyFile = "integration/fixtures/https/snitest.org.key"
+#
+# To redirect an entrypoint rewriting the URL:
+# [entryPoints]
+#   [entryPoints.http]
+#   address = ":80"
+#     [entryPoints.http.redirect]
+#       regex = "^http://localhost/(.*)"
+#       replacement = "http://mydomain/$1"
+
+# Enable retry sending request if network error
+#
+# Optional
+#
+# [retry]
+
+# Number of attempts
+#
+# Optional
+# Default: (number servers in backend) -1
+#
+# attempts = 3
+
+# Sets the maximum request body to be stored in memory in Mo
+#
+# Optional
+# Default: 2
+#
+# maxMem = 3
+
+################################################################
+# Web configuration backend
+################################################################
+
+# Enable web configuration backend
+#
+# Optional
+
+[api]
+
+# Web administration port
+#
+# Required
+
+address = ":8080"
+
+# SSL certificate and key used
+#
+# Optional
+#
+# CertFile = "traefik.crt"
+# KeyFile = "traefik.key"
+#
+# Set REST API to read-only mode
+#
+# Optional
+# ReadOnly = false
+
+
+################################################################
+# File configuration backend
+################################################################
+
+# Enable file configuration backend
+
+[file]
+
+# Rules file
+filename = "rules.toml"
+
+# Enable watch file changes
+watch = true
+
+# ################################################################
+# # Docker Provider
+# ################################################################
+
+# # Enable Docker Provider.
+# [docker]
+
+# # Docker server endpoint. Can be a tcp or a unix socket endpoint.
+# #
+# # Required
+# #
+# endpoint = "unix:///var/run/docker.sock"
+
+# # Default domain used.
+# # Can be overridden by setting the "traefik.domain" label on a container.
+# #
+# # Required
+# #
+# domain = "docker.localhost"
+
+# # Enable watch docker changes.
+# #
+# # Optional
+# #
+# watch = true
+
+# # Override default configuration template. For advanced users :)
+# # filename = "docker.tmpl"
+
+# # Override template version For advanced users :)
+# # - "1": previous template version (must be used only with older custom templates, see "filename")
+# # - "2": current template version (must be used to force template version when "filename" is used)
+# # templateVersion = 2
+
+# # Expose containers by default in Traefik. If set to false, containers that don't have `traefik.enable=true` will be ignored.
+# exposedByDefault = true
+
+# # Use the IP address from the binded port instead of the inner network one. For specific use-case :)
+# # Default: false
+# # usebindportip = true
+
+# # Use Swarm Mode services as data provider.
+# swarmMode = false
+
+# # Enable docker TLS connection.
+# #
+# # Optional
+# #
+# #  [docker.tls]
+# #  ca = "/etc/ssl/ca.crt"
+# #  cert = "/etc/ssl/docker.crt"
+# #  key = "/etc/ssl/docker.key"
+# #  insecureSkipVerify = true
+
+# ################################################################
+# # ECS Provider
+# ################################################################
+
+# [ecs]
+
+# # ECS Clusters Name.
+# clusters = ["epersonam-stag"]
+
+# # Enable watch ECS changes.
+# watch = true
+
+# # Default domain used.
+# # Can be overridden by setting the "traefik.domain" label.
+# #
+# # Optional
+# # Default: ""
+# #
+# domain = "ecs.localhost"
+
+# # Enable auto discover ECS clusters.
+# autoDiscoverClusters = false
+
+# # Polling interval (in seconds).
+# refreshSeconds = 15
+
+# # Expose ECS services by default in Traefik. (true)
+# # exposedByDefault = false
+
+# region = "eu-central-1"
+# # accessKeyID = "abc"
+# # secretAccessKey = "123"
+
+# # Override default configuration template.
+# # For advanced users :)
+# #
+# # Optional
+# #
+# # filename = "ecs.tmpl"
+
+# # Override template version
+# # For advanced users :)
+# #
+# # Optional
+# # - "1": previous template version (must be used only with older custom templates, see "filename")
+# # - "2": current template version (must be used to force template version when "filename" is used)
+# #
+# # templateVersion = 2

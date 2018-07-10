@@ -1,0 +1,29 @@
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+
+[frontends]
+
+  [frontends.whoami]
+  backend = "whoami"
+    [frontends.whoami.routes.test_1]
+    rule = "Host: whoami.docker.localhost"
+
+  [frontends.portainer]
+  backend = "portainer"
+    [frontends.portainer.routes.test_1]
+    rule = "Host: portainer.docker.localhost"
+
+[backends]
+
+  [backends.whoami]
+    [backends.whoami.servers.server1]
+    # url = "http://0.0.0.0:32787"
+    [backends.whoami.servers.server2]
+    # url = "http://0.0.0.0:32786"
+    [backends.whoami.servers.server3]
+    # url = "http://0.0.0.0:32785"
+
+  [backends.portainer]
+    [backends.portainer.servers.server1]
+    # url = "http://0.0.0.0:32784"
